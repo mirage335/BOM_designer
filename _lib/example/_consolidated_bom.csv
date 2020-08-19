@@ -1,3 +1,4 @@
+#item,dstpn,mult,qty,dst,mark,provider,path
 UsuallyBundleName1.fcstd,dstpnA,1,0,dst,mark,provider,path
 UsuallyBundleName2.fcstd,dstpnB,3,0,dst,mark,provider,path
 UsuallyModelOrBundleName3.fcstd,dstpnZ,2,0,dstZ,markZ,providerZ,pathZ,$12.34

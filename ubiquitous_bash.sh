@@ -17331,7 +17331,6 @@ _bom_consolidate_sequence() {
 						bom_provider="$bom_provider_lookup"
 						bom_path="$bom_path_lookup"
 						bom_extra="$bom_extra_lookup"
-						echo $bom_provider
 						_messagePlain_good 'determined: supplementary fields'
 					fi
 				fi
@@ -17555,15 +17554,16 @@ _BOM_designer_geometry_sequence() {
 	echo -n > "$safeTmp"/simplified.csv
 	_bom_simplify "$safeTmp"/consolidated.csv "$safeTmp"/simplified.csv
 	
-	# Sort.
+	# Sort. Label.
 	sort "$safeTmp"/simplified.csv > "$safeTmp"/simplified_sorted.csv
-	sort "$safeTmp"/consolidated.csv > "$safeTmp"/simplified_consolidated.csv
+	echo '#item,dstpn,mult,qty,dst,mark,provider,path' > "$safeTmp"/simplified_consolidated.csv
+	sort "$safeTmp"/consolidated.csv >> "$safeTmp"/simplified_consolidated.csv
 	
-	rm -f ./bom.csv > /dev/null 2>&1
-	rm -f ./consolidated_bom.csv > /dev/null 2>&1
+	rm -f ./_bom.csv > /dev/null 2>&1
+	rm -f ./_consolidated_bom.csv > /dev/null 2>&1
 	
-	cp "$safeTmp"/simplified_sorted.csv ./bom.csv
-	cp "$safeTmp"/simplified_consolidated.csv ./consolidated_bom.csv
+	cp "$safeTmp"/simplified_sorted.csv ./_bom.csv
+	cp "$safeTmp"/simplified_consolidated.csv ./_consolidated_bom.csv
 	
 	_stop
 }
