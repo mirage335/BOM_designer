@@ -17649,7 +17649,8 @@ _associate_anchors_request() {
 	fi
 	
 	
-	_messagePlain_request 'association: dir, *.pcb'
+	#_messagePlain_request 'association: dir, *.pcb'
+	_messagePlain_request 'association: dir'
 	echo _BOM_designer_geometry"$ub_anchor_suffix"
 }
 
