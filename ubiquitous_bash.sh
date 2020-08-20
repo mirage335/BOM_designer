@@ -17030,7 +17030,9 @@ _bom_update_sequence() {
 			fi
 		fi
 		
-		if ( [[ "$currentBlock_bom" == 'BUNDLE' ]] || [[ "$currentBlock_bom" == 'ITEM' ]] )
+		
+		bom_item=$(echo "$currentLine_bom" | cut -d ',' -f1)
+		if ( [[ "$currentBlock_bom" == 'BUNDLE' ]] || [[ "$currentBlock_bom" == 'ITEM' ]] ) && [[ "$bom_item" != "" ]]
 		then
 			if [[ $(_safeEcho "$currentLine_bom" | tr -dc ',' | wc -c) -lt '3' ]]
 			then
@@ -17041,6 +17043,7 @@ _bom_update_sequence() {
 			fi
 			
 			_messagePlain_nominal 'read: ITEM/BUNDLE'
+			
 			bom_item=$(echo "$currentLine_bom" | cut -d ',' -f1)
 			bom_dstpn=$(echo "$currentLine_bom" | cut -d ',' -f2)
 			#bom_mult=$(echo "$currentLine_bom" | cut -d ',' -f3 | tr -dc '0-9')
@@ -17208,7 +17211,8 @@ _bom_consolidate_sequence() {
 			fi
 		fi
 		
-		if ( [[ "$currentBlock_bom" == 'BUNDLE' ]] || [[ "$currentBlock_bom" == 'ITEM' ]] )
+		bom_item=$(echo "$currentLine_bom" | cut -d ',' -f1)
+		if ( [[ "$currentBlock_bom" == 'BUNDLE' ]] || [[ "$currentBlock_bom" == 'ITEM' ]] ) && [[ "$bom_item" != "" ]]
 		then
 			if [[ $(_safeEcho "$currentLine_bom" | tr -dc ',' | wc -c) -lt '3' ]]
 			then
@@ -17294,7 +17298,11 @@ _bom_consolidate_sequence() {
 				bom_item_lookup=$(echo "$currentLine_bom_lookup" | cut -d ',' -f1)
 				[[ "$bom_item_lookup" != "$bom_item" ]] && continue
 				
-				bom_mult_lookup=$(echo "$currentLine_bom_lookup" | cut -d ',' -f3)
+				bom_mult_lookup=$(echo "$currentLine_bom_lookup" | cut -d ',' -f3 | tr -dc '0-9')
+				! [[ "$bom_mult" -ge 0 ]] && bom_mult='0'
+				[[ "$bom_mult" == "" ]] && bom_mult='0'
+				! [[ "$bom_mult_lookup" -ge 0 ]] && bom_mult_lookup='0'
+				[[ "$bom_mult_lookup" == "" ]] && bom_mult_lookup='0'
 				bom_mult=$(bc <<< "$bom_mult + $bom_mult_lookup")
 				_messagePlain_good 'determined: mult: '"$bom_mult"
 				
@@ -17474,6 +17482,14 @@ _bom_simplify_sequence() {
 		then
 			_messagePlain_bad 'bad: invalid: insufficient fields'
 			_messagePlain_nominal 'ignore: line: invalid'
+			#_safeEcho_newline "$currentLine_bom" >> "$currentFile_bom_out"
+			continue
+		fi
+		
+		bom_item=$(echo "$currentLine_bom" | cut -d ',' -f1)
+		if [[ "$bom_item" == "" ]]
+		then
+			_messagePlain_nominal 'ignore: line: missing: item'
 			#_safeEcho_newline "$currentLine_bom" >> "$currentFile_bom_out"
 			continue
 		fi
