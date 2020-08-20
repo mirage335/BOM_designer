@@ -23,6 +23,8 @@ _bom_update_sequence() {
 	# WARNING: Changes default bash pattern matching behavior.
 	#shopt -s nocasematch
 	
+	
+	
 	while read currentLine_bom
 	do
 		_messagePlain_nominal 'read: currentLine_bom'
@@ -39,6 +41,47 @@ _bom_update_sequence() {
 			
 			_messagePlain_nominal 'write: line: magic'
 			_safeEcho_newline "$currentLine_bom" >> "$currentFile_bom_out"
+			
+			[[ "$currentBlock_bom" == "MULTIPLIER" ]] && echo '<h1 style="font-size:14px;"><font color=purple>MULTIPLIER</font></h1>' >> "$currentFile_bom_out".html
+			
+			if [[ "$currentBlock_bom" == "BUNDLE" ]]
+			then
+				echo '<h1 style="font-size:14px;">BUNDLE</h1>' >> "$currentFile_bom_out".html
+				echo '<table class="fixed" border=1 style="font-size:10px;"><col width="442px" /><col width="78px" /><col width="18px" /><col width="78px" /><col width="78px" />' >> "$currentFile_bom_out".html
+				#item,dstpn,mult,dst,mark
+				echo '<tr><td>bundle</td><td>dstpn</td><td>mult</td><td>dst</td><td>mark</td></tr>' >> "$currentFile_bom_out".html
+			fi
+			
+			if [[ "$currentBlock_bom" == "ITEM" ]]
+			then
+				echo '<h1 style="font-size:14px;"><font color=blue>ITEM</font></h1>' >> "$currentFile_bom_out".html
+				echo '<table class="fixed" border=1 style="font-size:10px;"><col width="442px" /><col width="78px" /><col width="18px" /><col width="78px" /><col width="78px" />' >> "$currentFile_bom_out".html
+				#item,dstpn,mult,dst,mark
+				echo '<tr><td>item</td><td>dstpn</td><td>mult</td><td>dst</td><td>mark</td></tr>' >> "$currentFile_bom_out".html
+			fi
+			
+			
+			if [[ "$currentBlock_bom" == "stop" ]]
+			then
+				_safeEcho "$currentLine_bom" | grep -i '###BUNDLE-magic-stop###' > /dev/null 2>&1 && echo '</table>' >> "$currentFile_bom_out".html
+				_safeEcho "$currentLine_bom" | grep -i '###ITEM-magic-stop###' > /dev/null 2>&1 && echo '</table>' >> "$currentFile_bom_out".html
+				
+				echo '<br />' >> "$currentFile_bom_out".html
+			fi
+			
+			continue
+		fi
+		
+		
+		
+		if [[ "$currentBlock_bom" == 'COMMENTS' ]]
+		then
+			_messagePlain_nominal 'read: COMMENTS'
+			
+			_messagePlain_nominal 'write: line: orig'
+			_safeEcho_newline "$currentLine_bom" >> "$currentFile_bom_out"
+			_safeEcho_newline "$currentLine_bom"' <br />' >> "$currentFile_bom_out".html
+			
 			continue
 		fi
 		
@@ -53,6 +96,7 @@ _bom_update_sequence() {
 		then
 			_messagePlain_nominal 'write: line: comment'
 			_safeEcho_newline "$currentLine_bom" >> "$currentFile_bom_out"
+			
 			continue
 		fi
 		
@@ -66,6 +110,12 @@ _bom_update_sequence() {
 			else
 				_messagePlain_bad 'missing: MULTIPLIER'
 			fi
+			
+			_messagePlain_nominal 'write: line: orig'
+			_safeEcho_newline "$currentLine_bom" >> "$currentFile_bom_out"
+			_safeEcho_newline "$currentLine_bom"' <br />' >> "$currentFile_bom_out".html
+			
+			continue
 		fi
 		
 		
@@ -82,7 +132,7 @@ _bom_update_sequence() {
 			
 			_messagePlain_nominal 'read: ITEM/BUNDLE'
 			
-			bom_item=$(echo "$currentLine_bom" | cut -d ',' -f1)
+			bom_item=$(echo "$currentLine_bom" | cut -d ',' -f1) 
 			bom_dstpn=$(echo "$currentLine_bom" | cut -d ',' -f2)
 			#bom_mult=$(echo "$currentLine_bom" | cut -d ',' -f3 | tr -dc '0-9')
 			 bom_mult='0'
@@ -108,6 +158,8 @@ _bom_update_sequence() {
 			[[ "$bom_extra" != "" ]] && bom_extra=','"$bom_extra"
 			_messagePlain_probe "$bom_item","$bom_dstpn","$bom_mult","$bom_qty","$bom_dst","$bom_mark","$bom_provider","$bom_path""$bom_extra"
 			_safeEcho_newline "$bom_item","$bom_dstpn","$bom_mult","$bom_qty","$bom_dst","$bom_mark","$bom_provider","$bom_path""$bom_extra" >> "$currentFile_bom_out"
+			
+			_safeEcho_newline '<tr><td>'"$bom_item"'</td><td>'"$bom_dstpn"'</td><td>'"$bom_mult"'</td><td>'"$bom_dst"'</td><td>'"$bom_mark"'</td></tr>' >> "$currentFile_bom_out".html
 		else
 			_messagePlain_nominal 'write: line: orig'
 			_safeEcho_newline "$currentLine_bom" >> "$currentFile_bom_out"
@@ -130,6 +182,8 @@ _bom_update_sequence() {
 	
 	
 	cp "$currentFile_bom_out" "$currentFile_bom"
+	
+	[[ "$BOM_designer_enable_html" != 'false' ]] && cp "$currentFile_bom_out".html "$currentFile_bom".html
 	
 	_stop
 }

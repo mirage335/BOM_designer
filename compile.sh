@@ -4201,6 +4201,8 @@ _compile_bash_program_prog() {
 	includeScriptList+=( core_bom_update.sh )
 	includeScriptList+=( core_bom_consolidate.sh )
 	includeScriptList+=( core_bom_simplify.sh )
+	
+	includeScriptList+=( core_bom_html.sh )
 }
 
 _compile_bash_config_prog() {	
