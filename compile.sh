@@ -4197,7 +4197,10 @@ _compile_bash_installation_prog() {
 
 _compile_bash_program_prog() {	
 	export includeScriptList
-	true
+	
+	includeScriptList+=( core_bom_update.sh )
+	includeScriptList+=( core_bom_consolidate.sh )
+	includeScriptList+=( core_bom_simplify.sh )
 }
 
 _compile_bash_config_prog() {	

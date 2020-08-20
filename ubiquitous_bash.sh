@@ -16957,6 +16957,16 @@ _test_prog() {
 	
 }
 
+
+_setup_prog() {
+	mkdir -p "$HOME"/.local/share/katepart5/syntax
+	cp "$scriptLib"/kwrite_syntax_highlighting/* "$HOME"/.local/share/katepart5/syntax/
+	
+	[[ ! -e "$HOME"/.local/share/katepart5/syntax/lbom.xml ]] && echo 'warn: missing: ~/.local/share/katepart5/syntax/'
+	
+	return 0
+}
+
 ##### Core
 
 
@@ -19146,7 +19156,10 @@ _compile_bash_installation_prog() {
 
 _compile_bash_program_prog() {	
 	export includeScriptList
-	true
+	
+	includeScriptList+=( core_bom_update.sh )
+	includeScriptList+=( core_bom_consolidate.sh )
+	includeScriptList+=( core_bom_simplify.sh )
 }
 
 _compile_bash_config_prog() {	

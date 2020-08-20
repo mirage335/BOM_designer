@@ -15,3 +15,13 @@ _test_prog() {
 	_vector_prog
 	
 }
+
+
+_setup_prog() {
+	mkdir -p "$HOME"/.local/share/katepart5/syntax
+	cp "$scriptLib"/kwrite_syntax_highlighting/* "$HOME"/.local/share/katepart5/syntax/
+	
+	[[ ! -e "$HOME"/.local/share/katepart5/syntax/lbom.xml ]] && echo 'warn: missing: ~/.local/share/katepart5/syntax/'
+	
+	return 0
+}
