@@ -16,7 +16,7 @@ _BOM_designer_geometry_sequence() {
 	echo -n > "$safeTmp"/concatenated.csv
 	find . \( -iname '*.lbom.csv' -o -iname '*.lbom.txt' -o -iname '*.lbom' \) -not -path '*/w_*/*' -not \( -iname 'overrides.lbom.csv' -o -iname 'overrides.lbom.txt' -o -iname 'overrides.lbom' \) -exec cat '{}' \; >> "$safeTmp"/concatenated.csv
 	echo -n > "$safeTmp"/overrides_concatenated.csv
-	find . \( -iname 'overrides.lbom.csv' -o -iname 'overrides.lbom.txt' -o -iname 'overrides.lbom' \) -exec cat '{}' \; >> "$safeTmp"/overrides_concatenated.csv
+	find . \( -iname 'overrides.lbom.csv' -o -iname 'overrides.lbom.txt' -o -iname 'overrides.lbom' -o -iname 'overrides.lbom.txt.txt' \) -exec cat '{}' \; >> "$safeTmp"/overrides_concatenated.csv
 	
 	# Update (optional, redundant, precautionary).
 	_bom_update "$safeTmp"/concatenated.csv
