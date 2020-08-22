@@ -16962,7 +16962,14 @@ _setup_prog() {
 	mkdir -p "$HOME"/.local/share/katepart5/syntax
 	cp "$scriptLib"/kwrite_syntax_highlighting/* "$HOME"/.local/share/katepart5/syntax/
 	
-	[[ ! -e "$HOME"/.local/share/katepart5/syntax/lbom.xml ]] && echo 'warn: missing: ~/.local/share/katepart5/syntax/'
+	[[ ! -e "$HOME"/.local/share/katepart5/syntax/lbom.xml ]] && echo 'warn: missing: ~/.local/share/katepart5/syntax/*'
+	
+	
+	
+	mkdir -p "$HOME"/.local/share/templates
+	cp "$scriptLib"/filemanager_templates/* "$HOME"/.local/share/templates/
+	
+	[[ ! -e "$HOME"/.local/share/templates/example.lbom.txt ]] && echo 'warn: missing: ~/.local/share/templates/*'
 	
 	return 0
 }
@@ -17446,7 +17453,7 @@ _bom_consolidate_sequence() {
 		fi
 		
 		bom_item=$(echo "$currentLine_bom" | cut -d ',' -f1)
-		if ( [[ "$currentBlock_bom" == 'BUNDLE' ]] || [[ "$currentBlock_bom" == 'ITEM' ]] ) && [[ "$bom_item" != "" ]]
+		if ( [[ "$currentBlock_bom" == 'ITEM' ]] ) && [[ "$bom_item" != "" ]]
 		then
 			if [[ $(_safeEcho "$currentLine_bom" | tr -dc ',' | wc -c) -lt '3' ]]
 			then
@@ -17457,7 +17464,7 @@ _bom_consolidate_sequence() {
 				continue
 			fi
 			
-			_messagePlain_nominal 'read: ITEM/BUNDLE'
+			_messagePlain_nominal 'read: ITEM'
 			bom_item=$(echo "$currentLine_bom" | cut -d ',' -f1)
 			bom_dstpn=$(echo "$currentLine_bom" | cut -d ',' -f2)
 			#bom_mult=$(echo "$currentLine_bom" | cut -d ',' -f3 | tr -dc '0-9')

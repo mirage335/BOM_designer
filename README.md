@@ -14,6 +14,9 @@ ITEM/BUNDLE names are conventionally file names, regardless, these names are req
 
 Usually, an 'overrides.lbom.csv' file or similar, with zero/ignored qty/mult values, will be used to specify more than the minimum ITEM/BUNDLE, qty, and multiplier fields. Additionally, any file may be used to fill in more complete information than entered into other BOM files.
 
+
+A "bins.ods" spreadsheet is provided to easily paste columns of data from other sources (eg. FreeCAD A2Plus BOM documents).
+
 # Design
 
 CSV format is intended to be compatible with LibreOffice Calc .

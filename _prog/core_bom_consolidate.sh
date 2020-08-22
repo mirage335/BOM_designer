@@ -109,7 +109,7 @@ _bom_consolidate_sequence() {
 		fi
 		
 		bom_item=$(echo "$currentLine_bom" | cut -d ',' -f1)
-		if ( [[ "$currentBlock_bom" == 'BUNDLE' ]] || [[ "$currentBlock_bom" == 'ITEM' ]] ) && [[ "$bom_item" != "" ]]
+		if ( [[ "$currentBlock_bom" == 'ITEM' ]] ) && [[ "$bom_item" != "" ]]
 		then
 			if [[ $(_safeEcho "$currentLine_bom" | tr -dc ',' | wc -c) -lt '3' ]]
 			then
@@ -120,7 +120,7 @@ _bom_consolidate_sequence() {
 				continue
 			fi
 			
-			_messagePlain_nominal 'read: ITEM/BUNDLE'
+			_messagePlain_nominal 'read: ITEM'
 			bom_item=$(echo "$currentLine_bom" | cut -d ',' -f1)
 			bom_dstpn=$(echo "$currentLine_bom" | cut -d ',' -f2)
 			#bom_mult=$(echo "$currentLine_bom" | cut -d ',' -f3 | tr -dc '0-9')
