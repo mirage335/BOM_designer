@@ -2,20 +2,33 @@ Copyright (C) 2020 mirage335
 See the end of the file for license conditions.
 See license.txt for BOM_designer license conditions.
 
+Hierarchical BOM using simple text files and shell script. Multiplies and adds all ITEM entries in 'csv' format (comma separated values) from all files with extensions '*.lbom.csv', '*.lbom.txt', '*.lbom' . Compiles a consolidated list.
+
+
 # Usage
 
 _BOM_designer_geometry ./
 
-Finds all all files with extensions '*.lbom.csv', '*.lbom.txt', '*.lbom' . Compiles a consolidated list.
+*) Consolidated output 'qty' fields are normally '0'.
+
+*) Descriptive 'dst' (distributor),'mark' (marketing name),'provider' (arbitrary name for a supplier),'path' (location of geometry/CAD model file) may be empty.
+*) Descriptive fields will be filled from any entry with this entry and matching 'item' field.
+*) Conventionally, 'providers.lbom.txt' has 'qty' '0' ITEM entries with descriptive fields.
+*) Conventionally, 'overides.lbom.txt' has 'qty' '0' ITEM entries which *force* descriptive fields (ie. change to alternate suppliers as desired).
+
+*) COMMENTS are always ignored.
+*) MULTIPLIER converts 'qty' to 'mult'.
+*) BUNDLE entries are not consolidated - only 'mult' is updated.
+*) MULTIPLIER at files corresponding to BUNDLE entries should be edited to match.
+*) BUNDLE is only for user reference (equivalent to comments) and is not automatically consolidated.
+*) ITEM entries are automatically consolidated.
+
+*) ITEM/BUNDLE names must be unique.
+*) Conventionally, ITEM/BUNDLE names are file names matching a geometry/CAD model file name basename.
 
 Input format illustrated by example available under '_lib/example' .
 
-ITEM/BUNDLE names are conventionally file names, regardless, these names are required to be unique.
-
-Usually, an 'overrides.lbom.csv' file or similar, with zero/ignored qty/mult values, will be used to specify more than the minimum ITEM/BUNDLE, qty, and multiplier fields. Additionally, any file may be used to fill in more complete information than entered into other BOM files.
-
-
-A "bins.ods" spreadsheet is provided to easily paste columns of data from other sources (eg. FreeCAD A2Plus BOM documents).
+A "bins.ods" spreadsheet is provided for manual conversion to 'csv' (comma separated values), to easily paste columns of data from other sources (eg. FreeCAD A2Plus BOM documents).
 
 # Design
 
@@ -36,6 +49,10 @@ Scripting language 'bash' was chosen for similar reasons as for Ubiquitous Bash 
 Perl was the only other language thoroughly considered. While the text processing features may be more powerful, there is not yet a clear need for them, and new major versions in progress of 'perl' raise stability concerns. Similar structure to 'bash' allows the possibility of a future port to well structured 'perl' code if additionally functionality required at some point warrants the perceived risk.
 C, C++, Go, Java, and similar, were considered unnecessarily risky due to any possibility of machine-specific dependencies.
 Python was ruled out immediately due to ongoing portability and stability concerns.
+
+
+BUNDLE quantities are ignored by default - this can be changed by adding BUNDLE to the relevant line of code at 'core_bom_consolidate.sh'.
+' if ( [[ "$currentBlock_bom" == 'ITEM' ]] ) && [[ "$bom_item" != "" ]] '
 
 
 # Future Work
