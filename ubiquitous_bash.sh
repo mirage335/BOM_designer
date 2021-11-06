@@ -30,9 +30,9 @@ _ub_cksum_special_derivativeScripts_contents() {
 ##### CHECKSUM BOUNDARY - 30 lines
 
 #export ub_setScriptChecksum_disable='true'
-( [[ -e "$0".nck ]] || [[ "${BASH_SOURCE[0]}" != "${0}" ]] || [[ "$1" == '--profile' ]] || [[ "$1" == '--script' ]] || [[ "$1" == '--call' ]] || [[ "$1" == '--return' ]] || [[ "$1" == '--devenv' ]] || [[ "$1" == '--shell' ]] || [[ "$1" == '--bypass' ]] || [[ "$1" == '--parent' ]] || [[ "$1" == '--embed' ]] || [[ "$0" == "/bin/bash" ]] || [[ "$0" == "-bash" ]] || [[ "$0" == "/usr/bin/bash" ]] || [[ "$0" == "bash" ]] ) && export ub_setScriptChecksum_disable='true'
+( [[ -e "$0".nck ]] || [[ "${BASH_SOURCE[0]}" != "${0}" ]] || [[ "$1" == '--profile' ]] || [[ "$1" == '--script' ]] || [[ "$1" == '--call' ]] || [[ "$1" == '--return' ]] || [[ "$1" == '--devenv' ]] || [[ "$1" == '--shell' ]] || [[ "$1" == '--bypass' ]] || [[ "$1" == '--parent' ]] || [[ "$1" == '--embed' ]] || [[ "$1" == '--compressed' ]] || [[ "$0" == "/bin/bash" ]] || [[ "$0" == "-bash" ]] || [[ "$0" == "/usr/bin/bash" ]] || [[ "$0" == "bash" ]] ) && export ub_setScriptChecksum_disable='true'
 export ub_setScriptChecksum_header='1891409836'
-export ub_setScriptChecksum_contents='837516591'
+export ub_setScriptChecksum_contents='1734626409'
 
 # CAUTION: Symlinks may cause problems. Disable this test for such cases if necessary.
 # WARNING: Performance may be crucial here.
@@ -169,8 +169,8 @@ ub_loginshell=
 # ATTENTION: Apparently (Portable) Cygwin Bash interprets correctly.
 [[ "${BASH_SOURCE[0]}" != "${0}" ]] && ub_import="true"
 
-([[ "$1" == '--profile' ]] || [[ "$1" == '--script' ]] || [[ "$1" == '--call' ]] || [[ "$1" == '--return' ]] || [[ "$1" == '--devenv' ]] || [[ "$1" == '--shell' ]] || [[ "$1" == '--bypass' ]] || [[ "$1" == '--parent' ]] || [[ "$1" == '--embed' ]]) && ub_import_param="$1" && shift
-([[ "$0" == "/bin/bash" ]] || [[ "$0" == "-bash" ]] || [[ "$0" == "/usr/bin/bash" ]] || [[ "$0" == "bash" ]]) && ub_loginshell="true"	#Importing ubiquitous bash into a login shell with "~/.bashrc" is the only known cause for "_getScriptAbsoluteLocation" to return a result such as "/bin/bash".
+( [[ "$1" == '--profile' ]] || [[ "$1" == '--script' ]] || [[ "$1" == '--call' ]] || [[ "$1" == '--return' ]] || [[ "$1" == '--devenv' ]] || [[ "$1" == '--shell' ]] || [[ "$1" == '--bypass' ]] || [[ "$1" == '--parent' ]] || [[ "$1" == '--embed' ]] || [[ "$1" == '--compressed' ]] ) && ub_import_param="$1" && shift
+( [[ "$0" == "/bin/bash" ]] || [[ "$0" == "-bash" ]] || [[ "$0" == "/usr/bin/bash" ]] || [[ "$0" == "bash" ]] ) && ub_loginshell="true"	#Importing ubiquitous bash into a login shell with "~/.bashrc" is the only known cause for "_getScriptAbsoluteLocation" to return a result such as "/bin/bash".
 [[ "$ub_import" == "true" ]] && ! [[ "$ub_loginshell" == "true" ]] && ub_import_script="true"
 
 _messagePlain_probe_expr '$0= '"$0"'\n ''$1= '"$1"'\n ''ub_import= '"$ub_import"'\n ''ub_import_param= '"$ub_import_param"'\n ''ub_import_script= '"$ub_import_script"'\n ''ub_loginshell= '"$ub_loginshell" | _user_log-ub
@@ -179,21 +179,21 @@ _messagePlain_probe_expr '$0= '"$0"'\n ''$1= '"$1"'\n ''ub_import= '"$ub_import"
 # WARNING Import from shell can be detected. Import from script cannot. Asserting that script has been imported is possible. Asserting that script has not been imported is not possible. Users may be protected from interactive mistakes. Script developers are NOT protected.
 if [[ "$ub_import_param" == "--profile" ]]
 then
-	if ([[ "$profileScriptLocation" == "" ]] ||  [[ "$profileScriptFolder" == "" ]]) && _messagePlain_bad 'import: profile: missing: profileScriptLocation, missing: profileScriptFolder' | _user_log-ub
+	if ( [[ "$profileScriptLocation" == "" ]] ||  [[ "$profileScriptFolder" == "" ]] ) && _messagePlain_bad 'import: profile: missing: profileScriptLocation, missing: profileScriptFolder' | _user_log-ub
 	then
 		return 1 >/dev/null 2>&1
 		exit 1
 	fi
-elif ([[ "$ub_import_param" == "--parent" ]] || [[ "$ub_import_param" == "--embed" ]] || [[ "$ub_import_param" == "--return" ]] || [[ "$ub_import_param" == "--devenv" ]])
+elif ( [[ "$ub_import_param" == "--parent" ]] || [[ "$ub_import_param" == "--embed" ]] || [[ "$ub_import_param" == "--return" ]] || [[ "$ub_import_param" == "--devenv" ]] )
 then
-	if ([[ "$scriptAbsoluteLocation" == "" ]] || [[ "$scriptAbsoluteFolder" == "" ]] || [[ "$sessionid" == "" ]]) && _messagePlain_bad 'import: parent: missing: scriptAbsoluteLocation, missing: scriptAbsoluteFolder, missing: sessionid' | _user_log-ub
+	if ( [[ "$scriptAbsoluteLocation" == "" ]] || [[ "$scriptAbsoluteFolder" == "" ]] || [[ "$sessionid" == "" ]] ) && _messagePlain_bad 'import: parent: missing: scriptAbsoluteLocation, missing: scriptAbsoluteFolder, missing: sessionid' | _user_log-ub
 	then
 		return 1 >/dev/null 2>&1
 		exit 1
 	fi
-elif [[ "$ub_import_param" == "--call" ]] || [[ "$ub_import_param" == "--script" ]] || [[ "$ub_import_param" == "--bypass" ]] || [[ "$ub_import_param" == "--shell" ]] || ([[ "$ub_import" == "true" ]] && [[ "$ub_import_param" == "" ]])
+elif [[ "$ub_import_param" == "--call" ]] || [[ "$ub_import_param" == "--script" ]] || [[ "$ub_import_param" == "--bypass" ]] || [[ "$ub_import_param" == "--shell" ]] || [[ "$ub_import_param" == "--compressed" ]] || ( [[ "$ub_import" == "true" ]] && [[ "$ub_import_param" == "" ]] )
 then
-	if ([[ "$importScriptLocation" == "" ]] ||  [[ "$importScriptFolder" == "" ]]) && _messagePlain_bad 'import: call: missing: importScriptLocation, missing: importScriptFolder' | _user_log-ub
+	if ( [[ "$importScriptLocation" == "" ]] || [[ "$importScriptFolder" == "" ]] ) && _messagePlain_bad 'import: call: missing: importScriptLocation, missing: importScriptFolder' | _user_log-ub
 	then
 		return 1 >/dev/null 2>&1
 		exit 1
@@ -1435,7 +1435,7 @@ _package-cygwin() {
 #####Utilities
 
 _test_getAbsoluteLocation_sequence() {
-	_start
+	_start scriptLocal_mkdir_disable
 	
 	local testScriptLocation_actual
 	local testScriptLocation
@@ -1524,7 +1524,7 @@ _test_getAbsoluteLocation() {
 
 #https://unix.stackexchange.com/questions/293892/realpath-l-vs-p
 _test_realpath_L_s_sequence() {
-	_start
+	_start scriptLocal_mkdir_disable
 	local functionEntryPWD
 	functionEntryPWD="$PWD"
 	
@@ -1604,7 +1604,7 @@ _test_realpath() {
 }
 
 _test_readlink_f_sequence() {
-	_start
+	_start scriptLocal_mkdir_disable
 	
 	echo > "$safeTmp"/realFile
 	ln -s "$safeTmp"/realFile "$safeTmp"/linkA
@@ -2388,6 +2388,17 @@ _uid() {
 		cat /dev/urandom 2> /dev/null | base64 2> /dev/null | tr -dc 'a-zA-Z0-9' 2> /dev/null | tr -d 'acdefhilmnopqrsuvACDEFHILMNOPQRSU14580' | head -c "$currentLengthUID" 2> /dev/null
 	fi
 	return 0
+}
+
+# WARNING: Reduces uniqueness, irreversible. Multiple input characters result in same output character.
+_filter_random() {
+	tr 'a-z' 'bgjktwxyz''bgjktwxyz''bgjktwxyz' | tr 'A-Z' 'BGJKTVWXYZ''BGJKTVWXYZ''BGJKTVWXYZ' | tr '0-9' '23679''23679''23679' | tr -dc 'bgjktwxyz23679BGJKTVWXYZ'
+}
+
+# WARNING: Reduces uniqueness, irreversible. Multiple input characters result in same output character.
+# WARNING: Not recommended for short strings (ie. not recommended for '8.3' compatibility ).
+_filter_hex() {
+	tr 'a-z' 'bcdf''bcdf''bcdf''bcdf''bcdf''bcdf''bcdf''bcdf' | tr 'A-Z' 'BCDF''BCDF''BCDF''BCDF''BCDF''BCDF''BCDF''BCDF' | tr '0-9' '23679''23679''23679' | tr -dc 'bcdf23679BCDF'
 }
 
 _compat_stat_c_run() {
@@ -6664,7 +6675,11 @@ _test_abstractfs() {
 
 # WARNING: First parameter, "$1" , must always be non-translated program to run or specialized abstractfs command.
 # Specifically do not attempt _abstractfs "$scriptAbsoluteLocation" or similar.
-# "$scriptAbsoluteLocation" _fakeHome "$scriptAbsoluteLocation" _abstractfs bash
+#"$scriptAbsoluteLocation" _fakeHome "$scriptAbsoluteLocation" _abstractfs bash
+# DANGER: Consistent directory naming.
+# Force creation of 'project.afs' .
+#export afs_nofs='false'
+#export ubAbstractFS_enable_projectafs_dir='true'
 _abstractfs() {
 	#Nesting prohibited. Not fully tested.
 	# WARNING: May cause infinite recursion symlinks.
@@ -7534,12 +7549,13 @@ _default_name_abstractfs() {
 	if ( [[ "$nofs" == "true" ]] || [[ "$afs_nofs" == "true" ]] )
 	then
 		#echo $(basename "$abstractfs_base") | md5sum | head -c 8
-		_describe_abstractfs "$@" | md5sum | head -c 8
+		_describe_abstractfs "$@" | md5sum | _filter_random | head -c 8
 		return
 	fi
 	
-	cat /dev/urandom 2> /dev/null | base64 2> /dev/null | tr -dc 'a-z' 2> /dev/null | head -c "1" 2> /dev/null
-	cat /dev/urandom 2> /dev/null | base64 2> /dev/null | tr -dc 'a-z0-9' 2> /dev/null | head -c "7" 2> /dev/null
+	cat /dev/urandom 2> /dev/null | base64 2> /dev/null | tr -dc 'a-z' 2> /dev/null | head -c "1" | _filter_random 2> /dev/null
+	#cat /dev/urandom 2> /dev/null | base64 2> /dev/null | tr -dc 'a-z0-9' 2> /dev/null | head -c "7"  | _filter_random 2> /dev/null
+	_uid 7
 }
 
 #"$1" == "$abstractfs_base" || ""
@@ -13846,6 +13862,152 @@ _dropCache() {
 
 
 
+_test_search() {
+	_tryExec "_test_recoll"
+}
+
+# ATTENTION: Override with 'ops.sh' or similar.
+_set_search_prog() {
+	true
+	#export current_configDir_search="$scriptLocal"/search
+	#export current_configDir_search="$current_projectDir_search"/.search
+}
+
+_set_search() {
+	_messagePlain_nominal 'init: _set_search'
+	
+	# DANGER: Consistent directory naming.
+	# Force creation of 'project.afs' .
+	export afs_nofs='false'
+	export ubAbstractFS_enable_projectafs_dir='true'
+	
+	_reset_abstractfs
+	"$scriptAbsoluteLocation" _messagePlain_probe_cmd _findProjectAFS .
+	_reset_abstractfs
+	
+	_messagePlain_probe_cmd _abstractfs ls -d ./.
+	_messagePlain_probe_var abstractfs
+	
+	_messagePlain_nominal "set: search"
+	export current_abstractDir_search="$abstractfs"
+	export current_projectDir_search="$abstractfs_projectafs_dir"
+	_messagePlain_probe_var current_projectDir_search
+	#export current_configDir_search="$scriptLocal"/search
+	export current_configDir_search="$current_projectDir_search"/.search
+	_set_search_prog "$@"
+	_messagePlain_probe_var current_configDir_search
+	
+	_reset_abstractfs
+}
+
+_prepare_search() {
+	_messagePlain_nominal 'init: _prepare_search'
+	_set_search "$@"
+	
+	_messagePlain_nominal '_prepare_search: dir'
+	#"$scriptAbsoluteLocation" _abstractfs _messagePlain_probe_cmd mkdir -p "$current_configDir_search"
+	_messagePlain_probe_cmd mkdir -p "$current_configDir_search"
+}
+
+# recoll
+
+_test_recoll() {
+	_getDep recoll
+	
+	_getDep recollindex
+	_getDep recollq
+	_getDep xadump
+}
+
+
+
+
+
+_set_recoll() {
+	_messagePlain_nominal 'init: _set_recoll'
+	_set_search "$@"
+	
+	# DANGER: Consistent directory naming.
+	# Force creation of 'project.afs' .
+	export afs_nofs='false'
+	export ubAbstractFS_enable_projectafs_dir='true'
+	
+	_messagePlain_nominal "set: recoll"
+	export current_configDir_search_recoll="$current_configDir_search"/recoll_config
+	_messagePlain_probe_var current_configDir_search_recoll
+}
+
+_prepare_recoll() {
+	_messagePlain_nominal 'init: _prepare_recoll'
+	#_set_search "$@"
+	_set_recoll "$@"
+	
+	
+	_messagePlain_nominal '_prepare_recoll: dir'
+	#"$scriptAbsoluteLocation" _abstractfs _messagePlain_probe_cmd mkdir -p "$current_configDir_search_recoll"
+	_messagePlain_probe_cmd mkdir -p "$current_configDir_search_recoll"
+}
+
+
+_recoll_procedure() {
+	_messageNormal '_recoll: program'
+	cd "$current_projectDir_search"
+	#"$scriptAbsoluteLocation" _abstractfs bash
+	
+	( ! [[ -e "$current_configDir_search_recoll"/recoll.conf ]] || ! [[ -s "$current_configDir_search_recoll"/recoll.conf ]] ) && cat << CZXWXcRMTo8EmM8i4d >> "$current_configDir_search_recoll"/recoll.conf
+topdirs = $current_abstractDir_search
+skippedPaths = $current_abstractDir_search/w_*
+skippedNames+ = *.kate-swp .embed .pid .recoll .search .sessionid _recoll \
+project.afs recoll recoll_config search
+CZXWXcRMTo8EmM8i4d
+	
+	( ! [[ -e "$current_configDir_search_recoll"/mimeview ]] || ! [[ -s "$current_configDir_search_recoll"/mimeview ]] ) && cat << 'CZXWXcRMTo8EmM8i4d' >> "$current_configDir_search_recoll"/mimeview
+xallexcepts- = application/pdf application/postscript application/x-dvi
+xallexcepts+ = text/html
+[view]
+text/html = chromium  %f
+CZXWXcRMTo8EmM8i4d
+	
+	
+	# https://www.lesbonscomptes.com/recoll/pages/custom.html#_alternating_result_backgrounds
+	# https://www.lesbonscomptes.com/recoll/pages/custom.html#_zooming_the_paragraph_font_size
+	# must set 'background: #ffffff;' or similar - otherwise results may nearly be undreadable
+	_messagePlain_request 'request: Some project specific configuration of '"'recoll'"'may be necessary.'
+	_messagePlain_request 'request: topdirs = '"$current_abstractDir_search"''
+	_messagePlain_request 'request: skippedPaths = '"$current_abstractDir_search"'/w_*'
+	_messagePlain_request 'request: skippedNames+ =
+project.afs
+recoll_config
+.search
+.recoll
+search
+recoll
+_recoll
+*.kate-swp
+
+.embed.sh
+.pid
+.sessionid'
+	_messagePlain_request 'request: mimeview:
+xallexcepts- = application/pdf application/postscript application/x-dvi
+xallexcepts+ = text/html text/x-shellscript
+[view]
+text/x-shellscript = kwrite
+text/html = chromium %f'
+	_messagePlain_request 'request: <table class="respar" style="background: #ffffff;">'
+	"$scriptAbsoluteLocation" _abstractfs recoll -c "$current_configDir_search_recoll"
+}
+_recoll() {
+	_messageNormal 'Begin: _recoll'
+	_prepare_search
+	_prepare_recoll
+	
+	_recoll_procedure "$@"
+	
+	_messageNormal 'End: _recoll'
+}
+
+
 _here_mkboot_grubcfg() {
 	
 	cat << 'CZXWXcRMTo8EmM8i4d'
@@ -16431,7 +16593,7 @@ _upgradeUbiquitous() {
 }
 
 _resetUbiquitous_sequence() {
-	_start
+	_start scriptLocal_mkdir_disable
 	
 	[[ ! -e "$HOME"/.bashrc ]] && return 0
 	cp "$HOME"/.bashrc "$HOME"/.bashrc.bak
@@ -17021,7 +17183,7 @@ then
 	ub_import=true
 	true #Do not override.
 	_messagePlain_probe_expr 'parent: scriptAbsoluteLocation= '"$scriptAbsoluteLocation"'\n ''parent: scriptAbsoluteFolder= '"$scriptAbsoluteFolder"'\n ''parent: sessionid= '"$sessionid" | _user_log-ub
-elif [[ "$ub_import_param" == "--call" ]] || [[ "$ub_import_param" == "--script" ]] || [[ "$ub_import_param" == "--bypass" ]] || [[ "$ub_import_param" == "--shell" ]] || ( [[ "$ub_import" == "true" ]] && [[ "$ub_import_param" == "" ]] )
+elif [[ "$ub_import_param" == "--call" ]] || [[ "$ub_import_param" == "--script" ]] || [[ "$ub_import_param" == "--bypass" ]] || [[ "$ub_import_param" == "--shell" ]] || [[ "$ub_import_param" == "--compressed" ]] || ( [[ "$ub_import" == "true" ]] && [[ "$ub_import_param" == "" ]] )
 then
 	ub_import=true
 	export scriptAbsoluteLocation="$importScriptLocation"
@@ -22457,7 +22619,7 @@ _test_build() {
 alias _testBuild=_test_build
 
 _buildSequence() {
-	_start
+	_start scriptLocal_mkdir_disable
 	
 	echo -e '\E[1;32;46m Binary compiling...	\E[0m'
 	
@@ -22548,7 +22710,7 @@ _prepare() {
 	
 	! mkdir -p "$logTmp" && exit 1
 	
-	! mkdir -p "$scriptLocal" && exit 1
+	[[ "$*" != *scriptLocal_mkdir_disable* ]] && ! mkdir -p "$scriptLocal" && exit 1
 	
 	! mkdir -p "$bootTmp" && exit 1
 	
@@ -22580,7 +22742,7 @@ _start_stty_echo() {
 _start() {
 	_start_stty_echo
 	
-	_prepare
+	_prepare "$@"
 	
 	#touch "$varStore"
 	#. "$varStore"
@@ -23476,7 +23638,7 @@ _variableLocalTestC_procedure() {
 }
 
 _variableLocalTest_sequence() {
-	_start
+	_start scriptLocal_mkdir_disable
 	
 	variableLocalTest_currentSubFunction() {
 		if ! [[ "$currentSubFunctionTest" == "true" ]] || ! [[ $(echo "$currentSubFunctionTest") == "true" ]]
@@ -23722,11 +23884,13 @@ _test_embed_procedure-embed() {
 	[[ "$ub_import" == '' ]] && return 1
 	[[ "$ub_import_param" != '--embed' ]] && return 1
 	
-	return 0
+	#_stop 0
+	#return 0
+	true
 }
 
 _test_embed_sequence() {
-	_start
+	_start scriptLocal_mkdir_disable
 	
 	#echo $ub_import
 	#echo $ub_import_param
@@ -23742,8 +23906,6 @@ _test_embed_sequence() {
 	! "$safeTmp"/.embed.sh _true && _stop 1
 	
 	"$safeTmp"/.embed.sh _false && _stop 1
-	
-	
 	
 	! "$safeTmp"/.embed.sh _test_embed_procedure-embed && _stop 1
 	
@@ -23802,7 +23964,7 @@ _test_parallelFifo_procedure() {
 
 # No production use.
 _test_parallelFifo_sequence() {
-	_start
+	_start scriptLocal_mkdir_disable
 	
 	_test_parallelFifo_procedure "$@"
 	
@@ -23937,7 +24099,7 @@ _test_sanity() {
 	
 	[[ -e "$safeTmp" ]] && _messageFAIL && return 1
 	
-	_start
+	_start scriptLocal_mkdir_disable
 	
 	
 	[[ ! -e "$safeTmp" ]] && _messageFAIL && return 1
@@ -24074,8 +24236,8 @@ _test_sanity() {
 _test-shell() {
 	_installation_nonet_default
 	
-	# ATTENTION: As part of sanity test, "$safeTmp" must not exist until '_start' is called from within '_test_sanity' .
-	#_start
+	# ATTENTION: As part of sanity test, "$safeTmp" must not exist until '_start scriptLocal_mkdir_disable' is called from within '_test_sanity' .
+	#_start scriptLocal_mkdir_disable
 	_messageNormal "Sanity..."
 	_test_sanity && _messagePASS
 	
@@ -24305,6 +24467,8 @@ _test() {
 	
 	_tryExec "_test_virtLocal_X11"
 	
+	_tryExec "_test_search"
+	
 	_tryExec "_test_packetDriveDevice"
 	_tryExec "_test_gparted"
 	
@@ -24399,6 +24563,7 @@ _test() {
 	
 	_tryExec "_test_prog"
 	
+	
 	_stop
 }
 
@@ -24407,7 +24572,7 @@ _test() {
 #}
 
 _testBuilt() {
-	_start
+	_start scriptLocal_mkdir_disable
 	
 	_messageProcess "Binary checking"
 	
@@ -24517,7 +24682,7 @@ _setup_anchor() {
 _setup() {
 	_installation_nonet_default
 	
-	_start
+	_start scriptLocal_mkdir_disable
 	
 	"$scriptAbsoluteLocation" _test || _stop 1
 	
@@ -24641,7 +24806,7 @@ _package_subdir() {
 
 # WARNING Must define "_package_license" function in ops to include license files in package!
 _package_procedure() {
-	_start
+	_start scriptLocal_mkdir_disable
 	mkdir -p "$safeTmp"/package
 	
 	# WARNING: Largely due to presence of '.gitignore' files in 'ubcp' .
@@ -26459,6 +26624,7 @@ _init_deps() {
 	export enUb_git=""
 	export enUb_bup=""
 	export enUb_repo=""
+	export enUb_search=""
 	export enUb_cloud=""
 	export enUb_cloud_self=""
 	export enUb_cloud_build=""
@@ -26474,6 +26640,7 @@ _init_deps() {
 	export enUb_blockchain=""
 	export enUb_java=""
 	export enUb_image=""
+	export enUb_disc=""
 	export enUb_virt=""
 	export enUb_virt_thick=""
 	export enUb_virt_translation=""
@@ -26542,6 +26709,17 @@ _deps_bup() {
 
 _deps_repo() {
 	export enUb_repo="true"
+}
+
+_deps_search() {
+	_deps_abstractfs
+	
+	_deps_git
+	_deps_bup
+	
+	_deps_x11
+	
+	export enUb_search="true"
 }
 
 _deps_cloud() {
@@ -26673,14 +26851,20 @@ _deps_chroot() {
 _deps_qemu() {
 	_deps_notLean
 	_deps_virt
-	_deps_virt_thick
+	#_deps_virt_thick
+		_deps_distro
+		_deps_build
+		_deps_image
 	export enUb_QEMU="true"
 }
 
 _deps_vbox() {
 	_deps_notLean
 	_deps_virt
-	_deps_virt_thick
+	#_deps_virt_thick
+		_deps_distro
+		_deps_build
+		_deps_image
 	export enUb_vbox="true"
 }
 
@@ -26706,7 +26890,10 @@ _deps_dosbox() {
 _deps_msw() {
 	_deps_notLean
 	_deps_virt
-	_deps_virt_thick
+	#_deps_virt_thick
+		_deps_distro
+		_deps_build
+		_deps_image
 	_deps_qemu
 	_deps_vbox
 	_deps_wine
@@ -27018,12 +27205,18 @@ cat << 'CZXWXcRMTo8EmM8i4d' >> "$scriptAbsoluteFolder"/"$1"_compressed.sh
 if [[ "$1" == "--embed" ]]
 then
 	source <(echo "$current_internal_CompressedScript" | base64 -d | xz -d) "$@"
-	exit "$?"
+	internalFunctionExitStatus="$?"
+	return "$internalFunctionExitStatus" > /dev/null 2>&1
+	exit "$internalFunctionExitStatus"
 elif [[ "$1" == "--profile" ]] || [[ "$1" == "--parent" ]]
 then
 	source <(echo "$current_internal_CompressedScript" | base64 -d | xz -d) "$@"
 else
 	source <(echo "$current_internal_CompressedScript" | base64 -d | xz -d) --compressed "$@"
+	ub_import=
+	ub_import_param=
+	ub_import_script=
+	ub_loginshell=
 fi
 if [[ "$ub_import" == "true" ]] && ! ( [[ "$ub_import_param" == "--bypass" ]] ) || [[ "$ub_import_param" == "--compressed" ]] || [[ "$ub_import_param" == "--parent" ]] || [[ "$ub_import_param" == "--profile" ]]
 then
@@ -27090,19 +27283,23 @@ _test_prog() {
 	true
 }
 _main() {
-	#local current_deleteScriptLocal
-	#current_deleteScriptLocal="false"
-	
-	_start
+	#_start
+	_start scriptLocal_mkdir_disable
 	
 	_collect
 	
 	_enter "$@"
 	
 	_stop
-	
-	#[[ "$current_deleteScriptLocal" == "true" ]] && rmdir "$scriptLocal"
 }
+if [[ "$1" == '_test' ]]
+then
+	current_deleteScriptLocal="false"
+	[[ ! -e "$scriptLocal" ]] && current_deleteScriptLocal="true"
+	_stop_prog() {
+		[[ "$current_deleteScriptLocal" == "true" ]] && rmdir "$scriptLocal" > /dev/null 2>&1
+	}
+fi
 if [[ "$1" == '_'* ]] && type "$1" > /dev/null 2>&1
 then
 	"$@"
@@ -27179,6 +27376,8 @@ _compile_bash_deps() {
 		_deps_bup
 		
 		_deps_repo
+		
+		_deps_search
 		
 		# WARNING: Only known production use in this context is '_cloud_reset' , '_cloud_unhook' , and similar.
 		_deps_cloud
@@ -27308,7 +27507,7 @@ _compile_bash_deps() {
 		_deps_image
 		
 		_deps_virt
-		_deps_virt_thick
+		#_deps_virt_thick
 		
 		#_deps_chroot
 		_deps_qemu
@@ -27330,6 +27529,8 @@ _compile_bash_deps() {
 		_deps_git
 		_deps_bup
 		_deps_repo
+		
+		_deps_search
 		
 		#_deps_cloud
 		#_deps_cloud_self
@@ -27412,6 +27613,8 @@ _compile_bash_deps() {
 		_deps_bup
 		_deps_repo
 		
+		_deps_search
+		
 		#_deps_cloud
 		#_deps_cloud_self
 		#_deps_cloud_build
@@ -27492,6 +27695,8 @@ _compile_bash_deps() {
 		_deps_git
 		_deps_bup
 		_deps_repo
+		
+		_deps_search
 		
 		_deps_cloud
 		_deps_cloud_self
@@ -27779,6 +27984,10 @@ _compile_bash_shortcuts() {
 	
 	( [[ "$enUb_dev_heavy" == "true" ]] || [[ "$enUb_repo" == "true" ]] || [[ "$enUb_cloud" == "true" ]] ) && includeScriptList+=( "shortcuts/dev/app/repo/mktorrent"/mktorrent.sh )
 	( [[ "$enUb_notLean" == "true" ]] || [[ "$enUb_dev" == "true" ]] || [[ "$enUb_dev_heavy" == "true" ]] || [[ "$enUb_image" == "true" ]] || [[ "$enUb_repo" == "true" ]] || [[ "$enUb_cloud" == "true" ]] ) && includeScriptList+=( "shortcuts/dev/app/repo/disk"/dd.sh )
+	
+	
+	( [[ "$enUb_dev_heavy" == "true" ]] || [[ "$enUb_search" == "true" ]] ) && includeScriptList+=( "shortcuts/dev/app/search"/search.sh )
+	( [[ "$enUb_dev_heavy" == "true" ]] || [[ "$enUb_search" == "true" ]] ) && includeScriptList+=( "shortcuts/dev/app/search/recoll"/recoll.sh )
 	
 	
 	( [[ "$enUb_cloud_heavy" == "true" ]] || [[ "$enUb_cloud" == "true" ]] ) && includeScriptList+=( "shortcuts/cloud/self/screenScraper"/screenScraper-nix.sh )
