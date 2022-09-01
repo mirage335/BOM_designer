@@ -137,6 +137,8 @@ _refresh_anchors() {
 	
 	cp -a "$scriptAbsoluteFolder"/_anchor "$scriptAbsoluteFolder"/_BOM_designer_geometry
 	
+	cp -a "$scriptAbsoluteFolder"/_anchor.bat "$scriptAbsoluteFolder"/_BOM_designer_geometry.bat
+	
 	_tryExec "_refresh_anchors_task"
 	
 	return 0
