@@ -48,6 +48,9 @@ _BOM_designer_geometry_sequence() {
 _BOM_designer_geometry() {
 	"$scriptAbsoluteLocation" _BOM_designer_geometry_sequence "$@"
 }
+__BOM_designer_geometry() {
+	_BOM_designer_geometry "$@"
+}
 
 
 
