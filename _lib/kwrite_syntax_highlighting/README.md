@@ -6,5 +6,5 @@ _ MSW Install _
 
 _ NIX Install _
 
-./.local/share/katepart5/syntax
+~/.local/share/katepart5/syntax
 
